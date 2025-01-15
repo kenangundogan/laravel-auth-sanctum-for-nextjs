@@ -2,7 +2,7 @@
 import axios, { AxiosError } from "axios";
 
 const api = axios.create({
-    baseURL: "http://127.0.0.1:8000",
+    baseURL: "http://127.0.0.1:8000/api/v1/auth",
     headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
@@ -54,7 +54,7 @@ export const AuthService = {
     login: async (credentials: LoginCredentials) => {
         try {
             const response = await api.post<LoginResponse>(
-                "/api/login",
+                "/login",
                 credentials,
             );
             localStorage.setItem("token", response.data.token);
@@ -76,7 +76,7 @@ export const AuthService = {
             }
 
             // Token varsa API'ye logout isteği at
-            await api.post("/api/logout", {}, {
+            await api.post("/logout", {}, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -100,7 +100,7 @@ export const AuthService = {
                 throw new Error("Token bulunamadı");
             }
 
-            const response = await api.get("/api/user", {
+            const response = await api.get("/user", {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -118,7 +118,7 @@ export const AuthService = {
             const token = localStorage.getItem("token");
             if (!token) return false;
 
-            await api.get("/api/user");
+            await api.get("/user");
             return true;
         } catch (error) {
             return false;
